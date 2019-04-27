@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class PlayerController : MonoBehaviour {
 
+    [SerializeField] private UpperBodyController _upperBodyController;
+    [SerializeField] private LowerBodyController _lowerBodyController;
     [SerializeField] private LayerMask _groundLayerMask;
 
     [Space]
@@ -38,8 +40,12 @@ public class PlayerController : MonoBehaviour {
             _hasJumped = true;
         }
         if (Input.GetButtonDown("RegAttack")) {
-            Debug.Log("ATTACKED");
+            _upperBodyController.ThrowPunch();
         }
+
+        Vector3 localScale = transform.localScale;
+        localScale.x = horizInputAxis > 0.01F ? 1 : horizInputAxis < -0.01F ? -1 : localScale.x;
+        transform.localScale = localScale;
 
         Vector2 velocity = _rb2d.velocity;
         float horizontalVelocity = velocity.x + _horizontalMovementAcc * horizInputAxis;

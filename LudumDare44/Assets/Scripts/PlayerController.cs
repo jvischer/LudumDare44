@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         int movingDir = horizInputAxis > 0.01F ? 1 : horizInputAxis < -0.01F ? -1 : 0;
+        _upperBodyController.SetFacingDir(movingDir);
         _lowerBodyController.SetMoving(movingDir != 0);
 
         Vector3 localScale = transform.localScale;

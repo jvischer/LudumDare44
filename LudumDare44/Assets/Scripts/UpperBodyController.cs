@@ -23,6 +23,10 @@ public class UpperBodyController : MonoBehaviour {
         _animator.SetTrigger(PUNCH_TRIGGER);
     }
 
+    public void DamagePunchZone() {
+        Debug.Log("Damaging punch zone");
+    }
+
     public void CancelAttack() {
         _isMidAttack = false;
     }

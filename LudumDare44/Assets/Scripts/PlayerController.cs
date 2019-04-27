@@ -43,8 +43,11 @@ public class PlayerController : MonoBehaviour {
             _upperBodyController.ThrowPunch();
         }
 
+        int movingDir = horizInputAxis > 0.01F ? 1 : horizInputAxis < -0.01F ? -1 : 0;
+        _lowerBodyController.SetMoving(movingDir != 0);
+
         Vector3 localScale = transform.localScale;
-        localScale.x = horizInputAxis > 0.01F ? 1 : horizInputAxis < -0.01F ? -1 : localScale.x;
+        localScale.x = movingDir == 0 ? localScale.x : movingDir;
         transform.localScale = localScale;
 
         Vector2 velocity = _rb2d.velocity;
@@ -55,7 +58,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        float distance = 0.1F;
+        float distance = 0.15F;
         float width = _col2d.size.x;
         float height = _col2d.size.y;
         Vector3 rayDir = Vector3.down;
@@ -69,6 +72,8 @@ public class PlayerController : MonoBehaviour {
         } else {
             _isGrounded = false;
         }
+
+        _lowerBodyController.SetGrounded(_isGrounded);
 
         // Consume the jump charge if it has been pressed
         if (_hasJumped) {
@@ -87,7 +92,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private bool TryHitGround(Ray ray, float distance) {
-        Debug.DrawRay(ray.origin, distance * ray.direction, Color.blue, 0.2F);
+        Debug.DrawRay(ray.origin, distance * ray.direction, Color.blue, 0.1F);
         int hits = Physics2D.RaycastNonAlloc(ray.origin, ray.direction, _raycastHit2DCache, distance, _groundLayerMask);
         if (hits > 0) {
             return true;

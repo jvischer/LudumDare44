@@ -8,7 +8,6 @@ public class CameraController2D : MonoBehaviour {
     [SerializeField] private Transform _target;
     [SerializeField] private Vector3 _centerOffset;
     [SerializeField] private float _lookAheadFactor;
-    //[SerializeField] private float _lookAheadSpeed;
     [SerializeField] private float _movementSpeed;
 
     private Camera _camera;

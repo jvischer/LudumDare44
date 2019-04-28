@@ -48,8 +48,7 @@ public class DamageManager : MonoBehaviour {
             _damageManager._availableTextControllers.RemoveAt(chosenIndex);
         }
 
-        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPos);
-        chosenTextController.DisplayAt(damage.ToString(), screenPos, _damageManager.ReturnTextControllerToPool);
+        chosenTextController.DisplayAt(damage.ToString(), worldPos, _damageManager.ReturnTextControllerToPool);
     }
 
 }

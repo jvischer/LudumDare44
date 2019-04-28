@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Animator), typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator), typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class EnemyController : MonoBehaviour {
 
     private const string ATTACK_TRIGGER = "Attack";
@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] private Image _healthFillBar;
     [SerializeField] private Vector3 _damageOffset;
     [SerializeField] private LayerMask _playerLayerMask;
+    [SerializeField] private LayerMask _groundLayerMask;
     [SerializeField] private Vector2 _basicAttackOffset;
     [SerializeField] private Vector2 _basicAttackSize;
 
@@ -31,6 +32,7 @@ public class EnemyController : MonoBehaviour {
 
     private Animator _animator;
     private Rigidbody2D _rb2d;
+    private BoxCollider2D _boxCol2d;
     private EnemyActions _currAction;
     private int _initialHealth;
     private bool _isAttacking;
@@ -39,6 +41,7 @@ public class EnemyController : MonoBehaviour {
     private void Awake() {
         _animator = gameObject.GetComponent<Animator>();
         _rb2d = gameObject.GetComponent<Rigidbody2D>();
+        _boxCol2d = gameObject.GetComponent<BoxCollider2D>();
         _initialHealth = _health;
         _healthFillBar.fillAmount = 1.0F;
         _currAction = EnemyActions.Idle;
@@ -47,7 +50,7 @@ public class EnemyController : MonoBehaviour {
     }
 
     private void Start() {
-        StartCoroutine(UpdateLogic());
+        StartCoroutine(HandleUpdatingLogic());
     }
 
     private void Update() {
@@ -55,13 +58,19 @@ public class EnemyController : MonoBehaviour {
             return;
         }
 
-        Vector3 velocity = _rb2d.velocity;
+        Vector2 velocity = _rb2d.velocity;
         switch (_currAction) {
             case EnemyActions.MoveLeft:
-                velocity.x = -_movementSpeed;
+                if (!TryMoveLeft(ref velocity)) {
+                    UpdateLogic(new HashSet<EnemyActions>() { EnemyActions.MoveLeft });
+                    return;
+                }
                 break;
             case EnemyActions.MoveRight:
-                velocity.x = _movementSpeed;
+                if (!TryMoveRight(ref velocity)) {
+                    UpdateLogic(new HashSet<EnemyActions>() { EnemyActions.MoveRight });
+                    return;
+                }
                 break;
             case EnemyActions.AttackPlayer:
                 Debug.DrawLine(transform.position, _playerAttackRadius * (PlayerController.instance.transform.position - transform.position).normalized, Color.blue, 0.2F);
@@ -70,7 +79,17 @@ public class EnemyController : MonoBehaviour {
                 } else if (Vector3.Distance(PlayerController.instance.transform.position, transform.position) <= _playerAttackRadius) {
                     AttackPlayer(PlayerController.instance);
                 } else {
-                    velocity.x = Math.Sign(PlayerController.instance.transform.position.x - transform.position.x) * _movementSpeed;
+                    if (Math.Sign(PlayerController.instance.transform.position.x - transform.position.x) >= 0) {
+                        if (!TryMoveRight(ref velocity)) {
+                            UpdateLogic(new HashSet<EnemyActions>() { EnemyActions.MoveRight });
+                            return;
+                        }
+                    } else {
+                        if (!TryMoveLeft(ref velocity)) {
+                            UpdateLogic(new HashSet<EnemyActions>() { EnemyActions.MoveLeft });
+                            return;
+                        }
+                    }
                 }
                 break;
         }
@@ -87,20 +106,56 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
-    private IEnumerator UpdateLogic() {
+    private IEnumerator HandleUpdatingLogic() {
         WaitForSeconds wfs = new WaitForSeconds(_logicUpdateCooldown);
         while (!_isDead) {
-            Debug.DrawLine(transform.position, _playerDetectionRadius * (PlayerController.instance.transform.position - transform.position).normalized, Color.red, 0.2F);
-            if (_isAttacking) {
-                // Then do nothing
-            } else if (Vector3.Distance(PlayerController.instance.transform.position, transform.position) <= _playerDetectionRadius) {
-                _currAction = EnemyActions.AttackPlayer;
-            } else {
-                _currAction = RANDOM_ACTIONS[UnityEngine.Random.Range(0, RANDOM_ACTIONS.Length)];
-            }
-
+            UpdateLogic(null);
             yield return wfs;
         }
+    }
+
+    private bool TryMoveLeft(ref Vector2 velocity) {
+        Vector2 origin = transform.position;
+        origin += (_boxCol2d.size.x / 2) * Vector2.left;
+        origin += (_boxCol2d.size.y / 2) * Vector2.down;
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, 0.15F, _groundLayerMask);
+        if (hit.collider == null) {
+            return false;
+        }
+
+        velocity.x = -_movementSpeed;
+        return true;
+    }
+
+    private bool TryMoveRight(ref Vector2 velocity) {
+        Vector2 origin = transform.position;
+        origin += (_boxCol2d.size.x / 2) * Vector2.right;
+        origin += (_boxCol2d.size.y / 2) * Vector2.down;
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, 0.15F, _groundLayerMask);
+        if (hit.collider == null) {
+            return false;
+        }
+
+        velocity.x = _movementSpeed;
+        return true;
+    }
+
+    private void UpdateLogic(HashSet<EnemyActions> blacklistedActions) {
+        if (_isAttacking) {
+            // Then do nothing
+            return;
+        }
+
+        Debug.DrawLine(transform.position, _playerDetectionRadius * (PlayerController.instance.transform.position - transform.position).normalized, Color.red, 0.2F);
+        EnemyActions chosenAction = EnemyActions.Invalid;
+        while (chosenAction == EnemyActions.Invalid || blacklistedActions.Contains(chosenAction)) {
+            if (Vector3.Distance(PlayerController.instance.transform.position, transform.position) <= _playerDetectionRadius) {
+                chosenAction = EnemyActions.AttackPlayer;
+            } else {
+                chosenAction = RANDOM_ACTIONS[UnityEngine.Random.Range(0, RANDOM_ACTIONS.Length)];
+            }
+        }
+        _currAction = chosenAction;
     }
 
     private void AttackPlayer(PlayerController player) {
@@ -120,6 +175,7 @@ public class EnemyController : MonoBehaviour {
             _health = 0;
             _isDead = true;
 
+            _rb2d.velocity = Vector2.zero;
             _animator.SetTrigger(DEATH_TRIGGER);
         }
 
@@ -136,7 +192,6 @@ public class EnemyController : MonoBehaviour {
         for (int i = 0; i < hits.Length; i++) {
             PlayerController playerController = hits[i].gameObject.GetComponent<PlayerController>();
             if (playerController != null) {
-                Debug.Log("Hitting player");
                 playerController.TakeDamage(GameManager.gameData.GetPlayerDamage());
             }
         }
@@ -147,7 +202,7 @@ public class EnemyController : MonoBehaviour {
     }
 
     private enum EnemyActions {
-        AttackPlayer, Idle, MoveLeft, MoveRight,
+        Invalid, AttackPlayer, Idle, MoveLeft, MoveRight,
     }
 
 }

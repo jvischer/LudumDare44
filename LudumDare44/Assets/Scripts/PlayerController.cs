@@ -12,6 +12,10 @@ public class PlayerController : MonoBehaviour {
 
     [Space]
 
+    [SerializeField] private GameObject _laserSword;
+
+    [Space]
+
     [SerializeField] private float _horizontalMovementAcc = 1;
     [SerializeField] private float _maxHorizontalMovementSpeed = 1;
     [SerializeField] private float _horizontalGroundedFriction = 0.75F;
@@ -40,6 +44,10 @@ public class PlayerController : MonoBehaviour {
         _isDead = false;
     }
 
+    private void Start() {
+        _laserSword.SetActive(GameManager.gameData.GetPlayerWeapon() > 1);
+    }
+
     private void Update() {
         if (_isDead) {
             return;
@@ -52,6 +60,10 @@ public class PlayerController : MonoBehaviour {
         }
         if (Input.GetButtonDown("RegAttack")) {
             _upperBodyController.ThrowPunch();
+        } else if (Input.GetButtonDown("StrongAttack") && GameManager.gameData.GetPlayerWeapon() >= 1) {
+            _upperBodyController.SwingSword();
+        } else if (Input.GetButtonDown("SuperAttack") && GameManager.gameData.GetPlayerWeapon() >= 2) {
+            _upperBodyController.FireLaser();
         }
 
         int movingDir = horizInputAxis > 0.01F ? 1 : horizInputAxis < -0.01F ? -1 : 0;

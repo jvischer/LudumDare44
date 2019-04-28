@@ -25,7 +25,16 @@ public class LowerBodyController : MonoBehaviour {
     }
 
     public void Died() {
-        _animator.SetTrigger(DEATH_TRIGGER);
+        SpriteRenderer[] spriteRenderers = gameObject.GetComponentsInChildren<SpriteRenderer>();
+        for (int i = 0; i < spriteRenderers.Length; i++) {
+            GameObject child = spriteRenderers[i].gameObject;
+            PolygonCollider2D poly2d = child.GetComponent<PolygonCollider2D>();
+            Rigidbody2D rb2d = child.AddComponent<Rigidbody2D>();
+
+            poly2d.enabled = true;
+        }
+        _animator.enabled = false;
+        //_animator.SetTrigger(DEATH_TRIGGER);
     }
 
 }

@@ -43,4 +43,12 @@ public class GameData {
         return 1 + PlayerWeaponLvl;
     }
 
+    public int GetExtraDamageFromWeapon(int weaponLvl) {
+        return 3 * weaponLvl;
+    }
+
+    public int GetCurrentDamage(int weaponUsed) {
+        return GetPlayerDamage() + GetExtraDamageFromWeapon(weaponUsed);
+    }
+
 }

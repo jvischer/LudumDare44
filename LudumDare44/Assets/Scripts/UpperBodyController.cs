@@ -44,7 +44,7 @@ public class UpperBodyController : MonoBehaviour {
         for (int i = 0; i < hits.Length; i++) {
             EnemyController enemyController = hits[i].gameObject.GetComponent<EnemyController>();
             if (enemyController != null) {
-                enemyController.TakeDamage(DataManager.GetPlayerDamage(GameManager.gameData));
+                enemyController.TakeDamage(GameManager.gameData.GetPlayerDamage());
             }
         }
     }

@@ -24,16 +24,13 @@ public static class DataManager {
         PlayerPrefs.Save();
     }
     
-    public static int GetPlayerHealth(GameData gameData) {
-        return 3 + gameData.PlayerHealthLvl;
-    }
-
-    public static int GetPlayerDamage(GameData gameData) {
-        return 1 + gameData.PlayerDamageLvl;
-    }
-
-    public static int GetPlayerWeapon(GameData gameData) {
-        return 1 + gameData.PlayerWeaponLvl;
+    public static void AddPlayerHealth(int amount) {
+        int maxHealth = GameManager.gameData.GetPlayerHealth();
+        if (GameManager.gameData.PlayerCurrentHealth + amount > maxHealth) {
+            GameManager.gameData.PlayerCurrentHealth = maxHealth;
+        } else {
+            GameManager.gameData.PlayerCurrentHealth += amount;
+        }
     }
 
 }

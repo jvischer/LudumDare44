@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Animator))]
 public class EnemyController : MonoBehaviour {
 
     private const string DEATH_TRIGGER = "Dead";
 
+    [SerializeField] private Image _healthFillBar;
     [SerializeField] private Vector3 _damageOffset;
 
     [Space]
@@ -15,10 +17,13 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] private int _damage;
 
     private Animator _animator;
+    private int _initialHealth;
     private bool _isDead;
 
     private void Awake() {
         _animator = gameObject.GetComponent<Animator>();
+        _initialHealth = _health;
+        _healthFillBar.fillAmount = 1.0F;
     }
 
     public void TakeDamage(int damage) {
@@ -27,6 +32,7 @@ public class EnemyController : MonoBehaviour {
         }
 
         _health -= damage;
+        _healthFillBar.fillAmount = Mathf.Clamp01((float) _health / _initialHealth);
         if (_health <= 0) {
             _health = 0;
             _isDead = true;

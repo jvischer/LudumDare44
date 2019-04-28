@@ -101,4 +101,9 @@ public class PlayerController : MonoBehaviour {
         return false;
     }
 
+    public void PickedUpHealth(int amount) {
+        DataManager.AddPlayerHealth(amount);
+        Debug.Log("Restored " + amount + " health");
+    }
+
 }

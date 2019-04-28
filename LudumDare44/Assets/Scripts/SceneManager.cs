@@ -44,6 +44,7 @@ public static class JamSceneManager {
     }
 
     public static void LoadScene(JamScene jamScene) {
+        DataManager.UpdateLoadedJamScene(jamScene);
         LoadScene(JAM_SCENE_TO_BUILD_INDEX[jamScene]);
     }
 

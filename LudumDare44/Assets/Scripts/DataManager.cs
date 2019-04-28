@@ -26,6 +26,11 @@ public static class DataManager {
         PlayerPrefs.Save();
     }
 
+    public static void UpdateLoadedJamScene(JamScene jamScene) {
+        GameManager.gameData.LoadedJamScene = jamScene;
+        SaveGameData(GameManager.gameData);
+    }
+
     public static bool TakeDamage(int amount) {
         GameManager.gameData.PlayerCurrentHealth -= amount;
         if (GameManager.gameData.PlayerCurrentHealth <= 0) {

@@ -31,8 +31,6 @@ public class EnemyController : MonoBehaviour {
     [Space]
 
     [SerializeField] private AttackType _attackType = AttackType.Melee;
-    [SerializeField] private int _health;
-    [SerializeField] private int _damage;
 
     private Animator _animator;
     private Rigidbody2D _rb2d;
@@ -42,6 +40,8 @@ public class EnemyController : MonoBehaviour {
     private EnemyAction _currAction;
     private int _initialHealth;
     private bool _isAttacking;
+    private int _health;
+    private int _damage;
     private bool _isDead;
 
     private void Awake() {
@@ -52,6 +52,10 @@ public class EnemyController : MonoBehaviour {
             _rangedParticleMainModule = _rangedParticles.main;
             _initialRangedParticleSpeed = _rangedParticleMainModule.startSpeedMultiplier;
         }
+
+        _health = DataManager.GetEnemyHPForScene(GameManager.gameData.LoadedJamScene);
+        _damage = DataManager.GetEnemyDmgForScene(GameManager.gameData.LoadedJamScene);
+
         _initialHealth = _health;
         _healthFillBar.fillAmount = 1.0F;
         _currAction = EnemyAction.Idle;

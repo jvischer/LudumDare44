@@ -37,7 +37,6 @@ public class LevelButtonController : MonoBehaviour {
     }
 
     public void PlayLevel() {
-        Debug.Log("Entering level " + _world + "-" + _level + " w/ scene " + _jamScene);
         JamSceneManager.LoadScene(_jamScene);
     }
 

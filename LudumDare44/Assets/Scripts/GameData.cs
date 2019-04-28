@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 [Serializable]
 public class GameData {
 
+    public JamScene LoadedJamScene;
+
     public int PlayerHealthLvl;
     public int PlayerDamageLvl;
     public int PlayerWeaponLvl;
@@ -15,6 +17,7 @@ public class GameData {
 
     public static GameData GetDefault() {
         GameData defaultGameData = new GameData();
+        defaultGameData.LoadedJamScene = JamScene.Invalid;
         defaultGameData.PlayerHealthLvl = 0;
         defaultGameData.PlayerDamageLvl = 0;
         defaultGameData.PlayerWeaponLvl = 0;
@@ -23,12 +26,7 @@ public class GameData {
     }
 
     public void TryRespawn() {
-        if (PlayerCurrentHealth <= 0) {
-            PlayerHealthLvl = 0;
-            PlayerDamageLvl = 0;
-            PlayerWeaponLvl = 0;
-            PlayerCurrentHealth = GetPlayerHealth();
-        }
+        PlayerCurrentHealth = GetPlayerHealth();
     }
 
     public int GetPlayerHealth() {

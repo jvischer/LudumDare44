@@ -9,8 +9,11 @@ public class EnemyController : MonoBehaviour {
 
     private const string ATTACK_TRIGGER = "Attack";
     private const string DEATH_TRIGGER = "Dead";
-    private static readonly EnemyActions[] RANDOM_ACTIONS = new EnemyActions[] { EnemyActions.Idle, EnemyActions.MoveLeft, EnemyActions.MoveRight };
+    private static readonly EnemyAction[] RANDOM_ACTIONS = new EnemyAction[] { EnemyAction.Idle, EnemyAction.MoveLeft, EnemyAction.MoveRight };
+    private static readonly HashSet<EnemyAction> NO_ACTIONS = new HashSet<EnemyAction>();
 
+    [SerializeField] private ParticleSystem _rangedParticles;
+    [SerializeField] private ParticleSystemRenderer _rangedParticleRenderer;
     [SerializeField] private Image _healthFillBar;
     [SerializeField] private Vector3 _damageOffset;
     [SerializeField] private LayerMask _playerLayerMask;
@@ -27,13 +30,16 @@ public class EnemyController : MonoBehaviour {
 
     [Space]
 
+    [SerializeField] private AttackType _attackType = AttackType.Melee;
     [SerializeField] private int _health;
     [SerializeField] private int _damage;
 
     private Animator _animator;
     private Rigidbody2D _rb2d;
     private BoxCollider2D _boxCol2d;
-    private EnemyActions _currAction;
+    private ParticleSystem.MainModule _rangedParticleMainModule;
+    private float _initialRangedParticleSpeed;
+    private EnemyAction _currAction;
     private int _initialHealth;
     private bool _isAttacking;
     private bool _isDead;
@@ -42,9 +48,13 @@ public class EnemyController : MonoBehaviour {
         _animator = gameObject.GetComponent<Animator>();
         _rb2d = gameObject.GetComponent<Rigidbody2D>();
         _boxCol2d = gameObject.GetComponent<BoxCollider2D>();
+        if (_rangedParticles != null) {
+            _rangedParticleMainModule = _rangedParticles.main;
+            _initialRangedParticleSpeed = _rangedParticleMainModule.startSpeedMultiplier;
+        }
         _initialHealth = _health;
         _healthFillBar.fillAmount = 1.0F;
-        _currAction = EnemyActions.Idle;
+        _currAction = EnemyAction.Idle;
         _isAttacking = false;
         _isDead = false;
     }
@@ -60,19 +70,19 @@ public class EnemyController : MonoBehaviour {
 
         Vector2 velocity = _rb2d.velocity;
         switch (_currAction) {
-            case EnemyActions.MoveLeft:
+            case EnemyAction.MoveLeft:
                 if (!TryMoveLeft(ref velocity)) {
-                    UpdateLogic(new HashSet<EnemyActions>() { EnemyActions.MoveLeft });
+                    UpdateLogic(new HashSet<EnemyAction>() { EnemyAction.MoveLeft });
                     return;
                 }
                 break;
-            case EnemyActions.MoveRight:
+            case EnemyAction.MoveRight:
                 if (!TryMoveRight(ref velocity)) {
-                    UpdateLogic(new HashSet<EnemyActions>() { EnemyActions.MoveRight });
+                    UpdateLogic(new HashSet<EnemyAction>() { EnemyAction.MoveRight });
                     return;
                 }
                 break;
-            case EnemyActions.AttackPlayer:
+            case EnemyAction.AttackPlayer:
                 Debug.DrawLine(transform.position, _playerAttackRadius * (PlayerController.instance.transform.position - transform.position).normalized, Color.blue, 0.2F);
                 if (PlayerController.instance.isDead) {
 
@@ -81,12 +91,12 @@ public class EnemyController : MonoBehaviour {
                 } else {
                     if (Math.Sign(PlayerController.instance.transform.position.x - transform.position.x) >= 0) {
                         if (!TryMoveRight(ref velocity)) {
-                            UpdateLogic(new HashSet<EnemyActions>() { EnemyActions.MoveRight });
+                            UpdateLogic(new HashSet<EnemyAction>() { EnemyAction.MoveRight });
                             return;
                         }
                     } else {
                         if (!TryMoveLeft(ref velocity)) {
-                            UpdateLogic(new HashSet<EnemyActions>() { EnemyActions.MoveLeft });
+                            UpdateLogic(new HashSet<EnemyAction>() { EnemyAction.MoveLeft });
                             return;
                         }
                     }
@@ -99,17 +109,33 @@ public class EnemyController : MonoBehaviour {
             Vector3 localScale = transform.localScale;
             localScale.x = -1;
             transform.localScale = localScale;
-        } else {
+
+            if (_rangedParticles != null) {
+                _rangedParticleMainModule.startSpeedMultiplier = -_initialRangedParticleSpeed;
+
+                Vector3 flip = _rangedParticleRenderer.flip;
+                flip.x = 1;
+                _rangedParticleRenderer.flip = flip;
+            }
+        } else if (_rb2d.velocity.x < 0) {
             Vector3 localScale = transform.localScale;
             localScale.x = 1;
             transform.localScale = localScale;
+
+            if (_rangedParticles != null) {
+                _rangedParticleMainModule.startSpeedMultiplier = _initialRangedParticleSpeed;
+
+                Vector3 flip = _rangedParticleRenderer.flip;
+                flip.x = 0;
+                _rangedParticleRenderer.flip = flip;
+            }
         }
     }
 
     private IEnumerator HandleUpdatingLogic() {
         WaitForSeconds wfs = new WaitForSeconds(_logicUpdateCooldown);
         while (!_isDead) {
-            UpdateLogic(null);
+            UpdateLogic(NO_ACTIONS);
             yield return wfs;
         }
     }
@@ -140,17 +166,17 @@ public class EnemyController : MonoBehaviour {
         return true;
     }
 
-    private void UpdateLogic(HashSet<EnemyActions> blacklistedActions) {
+    private void UpdateLogic(HashSet<EnemyAction> blacklistedActions) {
         if (_isAttacking) {
             // Then do nothing
             return;
         }
 
         Debug.DrawLine(transform.position, _playerDetectionRadius * (PlayerController.instance.transform.position - transform.position).normalized, Color.red, 0.2F);
-        EnemyActions chosenAction = EnemyActions.Invalid;
-        while (chosenAction == EnemyActions.Invalid || blacklistedActions.Contains(chosenAction)) {
+        EnemyAction chosenAction = EnemyAction.Invalid;
+        while (chosenAction == EnemyAction.Invalid || blacklistedActions.Contains(chosenAction)) {
             if (Vector3.Distance(PlayerController.instance.transform.position, transform.position) <= _playerDetectionRadius) {
-                chosenAction = EnemyActions.AttackPlayer;
+                chosenAction = EnemyAction.AttackPlayer;
             } else {
                 chosenAction = RANDOM_ACTIONS[UnityEngine.Random.Range(0, RANDOM_ACTIONS.Length)];
             }
@@ -169,6 +195,8 @@ public class EnemyController : MonoBehaviour {
             return;
         }
 
+        DamageManager.DisplayDamageAt(damage, transform.position + _damageOffset);
+
         _health -= damage;
         _healthFillBar.fillAmount = Mathf.Clamp01((float) _health / _initialHealth);
         if (_health <= 0) {
@@ -178,30 +206,49 @@ public class EnemyController : MonoBehaviour {
             _rb2d.velocity = Vector2.zero;
             _animator.SetTrigger(DEATH_TRIGGER);
         }
-
-        DamageManager.DisplayDamageAt(damage, transform.position + _damageOffset);
     }
 
-    public void TryDealBasicDamage() {
-        Vector2 origin = new Vector2(transform.position.x + (transform.localScale.x >= 0 ? _basicAttackOffset.x : -_basicAttackOffset.x), transform.position.y + _basicAttackOffset.y);
-        Collider2D[] hits = Physics2D.OverlapBoxAll(origin, _basicAttackSize, 0, _playerLayerMask);
-        TryDealDamageToPlayer(_damage, hits);
+    public void ProcAttack() {
+        if (_attackType == AttackType.Melee) {
+            Vector2 origin = new Vector2(transform.position.x + (transform.localScale.x >= 0 ? _basicAttackOffset.x : -_basicAttackOffset.x), transform.position.y + _basicAttackOffset.y);
+            Collider2D[] hits = Physics2D.OverlapBoxAll(origin, _basicAttackSize, 0, _playerLayerMask);
+            TryDealDamageToPlayer(_damage, hits);
+        } else if (_attackType == AttackType.Ranged) {
+
+        }
     }
 
     private void TryDealDamageToPlayer(int damage, Collider2D[] hits) {
         for (int i = 0; i < hits.Length; i++) {
             PlayerController playerController = hits[i].gameObject.GetComponent<PlayerController>();
             if (playerController != null) {
-                playerController.TakeDamage(GameManager.gameData.GetPlayerDamage());
+                playerController.TakeDamage(damage);
             }
+        }
+    }
+
+    private void OnParticleCollision(GameObject other) {
+        // If it was a player's laser
+        if (other.layer == 8) {
+            TakeDamage(GameManager.gameData.GetCurrentDamage(2));
         }
     }
 
     private void onAttackEnded() {
         _isAttacking = false;
+
+        UpdateLogic(NO_ACTIONS);
     }
 
-    private enum EnemyActions {
+    private void onEnemyFadedOut() {
+        gameObject.SetActive(false);
+    }
+
+    public enum AttackType {
+        Melee, Ranged,
+    }
+
+    private enum EnemyAction {
         Invalid, AttackPlayer, Idle, MoveLeft, MoveRight,
     }
 

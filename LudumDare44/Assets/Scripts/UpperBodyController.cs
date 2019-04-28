@@ -13,6 +13,7 @@ public class UpperBodyController : MonoBehaviour {
 
     [SerializeField] private ParticleSystem _punchFX;
     [SerializeField] private ParticleSystemRenderer _punchRendererFX;
+    [SerializeField] private ParticleSystem _laserFX;
 
     [Space]
 
@@ -23,15 +24,19 @@ public class UpperBodyController : MonoBehaviour {
     [SerializeField] private Vector2 _swingZoneSize;
 
     private Animator _animator;
-    private ParticleSystem.MainModule _mainModule;
+    private ParticleSystem.MainModule _punchMainModule;
+    private ParticleSystem.MainModule _laserMainModule;
     private float _initialPunchSpeed;
+    private float _initialLaserSpeed;
     private int _facingDir;
     private bool _isMidAttack;
 
     private void Awake() {
         _animator = gameObject.GetComponent<Animator>();
-        _mainModule = _punchFX.main;
-        _initialPunchSpeed = _mainModule.startSpeedMultiplier;
+        _punchMainModule = _punchFX.main;
+        _laserMainModule = _laserFX.main;
+        _initialPunchSpeed = _punchMainModule.startSpeedMultiplier;
+        _initialLaserSpeed = _laserMainModule.startSpeedMultiplier;
         _facingDir = 1;
     }
 
@@ -96,6 +101,10 @@ public class UpperBodyController : MonoBehaviour {
     public void PlaySwingFX() {
     }
 
+    public void PlayLaserFX() {
+        _laserFX.Play();
+    }
+
     public void CancelAttack() {
         _isMidAttack = false;
     }
@@ -103,7 +112,8 @@ public class UpperBodyController : MonoBehaviour {
     public void SetFacingDir(int facingDir) {
         _facingDir = facingDir == 0 ? _facingDir : facingDir;
 
-        _mainModule.startSpeedMultiplier = facingDir > 0 ? _initialPunchSpeed : facingDir < 0 ? -_initialPunchSpeed : _mainModule.startSpeedMultiplier;
+        _punchMainModule.startSpeedMultiplier = facingDir > 0 ? _initialPunchSpeed : facingDir < 0 ? -_initialPunchSpeed : _punchMainModule.startSpeedMultiplier;
+        _laserMainModule.startSpeedMultiplier = facingDir > 0 ? _initialLaserSpeed : facingDir < 0 ? -_initialLaserSpeed : _laserMainModule.startSpeedMultiplier;
 
         Vector3 flip = _punchRendererFX.flip;
         flip.x = facingDir > 0 ? 0 : facingDir < 0 ? 1 : _punchRendererFX.flip.x;

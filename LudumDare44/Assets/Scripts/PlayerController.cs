@@ -60,9 +60,9 @@ public class PlayerController : MonoBehaviour {
         }
         if (Input.GetButtonDown("RegAttack")) {
             _upperBodyController.ThrowPunch();
-        } else if (Input.GetButtonDown("StrongAttack") && GameManager.gameData.GetPlayerWeapon() >= 1) {
+        } else if (Input.GetButtonDown("StrongAttack") && GameManager.gameData.GetPlayerWeapon() > 1) {
             _upperBodyController.SwingSword();
-        } else if (Input.GetButtonDown("SuperAttack") && GameManager.gameData.GetPlayerWeapon() >= 2) {
+        } else if (Input.GetButtonDown("SuperAttack") && GameManager.gameData.GetPlayerWeapon() > 2) {
             _upperBodyController.FireLaser();
         }
 

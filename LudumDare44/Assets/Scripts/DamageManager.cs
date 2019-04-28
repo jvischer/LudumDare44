@@ -34,6 +34,7 @@ public class DamageManager : MonoBehaviour {
     }
 
     public static void DisplayDamageAt(int damage, Vector2 worldPos) {
+        Debug.Log(damage + " " + worldPos);
         if (_damageManager == null) {
             Debug.LogError("[DamageManager] Damage manager was null. Could not show damage at position.");
             return;

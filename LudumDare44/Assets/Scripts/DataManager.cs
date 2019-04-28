@@ -44,4 +44,76 @@ public static class DataManager {
         }
     }
 
+    public static int GetMaxHPRewardForScene(JamScene jamScene) {
+        switch (jamScene) {
+            case JamScene.OneDashOne:
+                return 1;
+            case JamScene.OneDashTwo:
+                return 2;
+            case JamScene.OneDashThree:
+                return 3;
+            case JamScene.TwoDashOne:
+                return 5;
+            case JamScene.TwoDashTwo:
+                return 7;
+            case JamScene.TwoDashThree:
+                return 9;
+            case JamScene.ThreeDashOne:
+                return 12;
+            case JamScene.ThreeDashTwo:
+                return 15;
+            case JamScene.ThreeDashThree:
+                return 20;
+        }
+        return 0;
+    }
+
+    public static int GetEnemyHPForScene(JamScene jamScene) {
+        switch (jamScene) {
+            case JamScene.OneDashOne:
+                return 2;
+            case JamScene.OneDashTwo:
+                return 4;
+            case JamScene.OneDashThree:
+                return 6;
+            case JamScene.TwoDashOne:
+                return 9;
+            case JamScene.TwoDashTwo:
+                return 12;
+            case JamScene.TwoDashThree:
+                return 15;
+            case JamScene.ThreeDashOne:
+                return 20;
+            case JamScene.ThreeDashTwo:
+                return 25;
+            case JamScene.ThreeDashThree:
+                return 30;
+        }
+        return 10;
+    }
+
+    public static int GetEnemyDmgForScene(JamScene jamScene) {
+        switch (jamScene) {
+            case JamScene.OneDashOne:
+                return 1;
+            case JamScene.OneDashTwo:
+                return 2;
+            case JamScene.OneDashThree:
+                return 3;
+            case JamScene.TwoDashOne:
+                return 5;
+            case JamScene.TwoDashTwo:
+                return 7;
+            case JamScene.TwoDashThree:
+                return 9;
+            case JamScene.ThreeDashOne:
+                return 12;
+            case JamScene.ThreeDashTwo:
+                return 15;
+            case JamScene.ThreeDashThree:
+                return 18;
+        }
+        return 1;
+    }
+
 }

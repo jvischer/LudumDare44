@@ -140,7 +140,7 @@ public class PlayerController : MonoBehaviour {
             _upperBodyController.Died();
             _lowerBodyController.Died();
             _lowerBodyController.SetMoving(false);
-            JamSceneManager.ReloadSceneWithDelay(1.0F);
+            JamSceneManager.LoadSceneWithDelay(JamScene.MainMenu, 1.0F);
         }
 
         DamageManager.DisplayDamageAt(damage, transform.position + _damageOffset);

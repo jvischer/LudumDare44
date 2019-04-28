@@ -25,27 +25,22 @@ public class DamageTextController : MonoBehaviour {
 
     private void Update() {
         if (_isActive) {
-            Vector2 screenPos = Camera.main.WorldToScreenPoint(_worldPos);
-            transform.position = screenPos;
+            transform.position = _worldPos;
         }
     }
 
     public void DisplayAt(string text, Vector2 worldPos, Action<DamageTextController> onTextReadyForReuse) {
-        Debug.Log("Displaying text " + text + " for " + name + " " + _isActive);
-        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPos);
-        transform.position = screenPos;
+        transform.position = worldPos;
 
         _text.text = text;
         _worldPos = worldPos;
         _onTextReadyForReuse = onTextReadyForReuse;
 
-        //_text.enabled = true;
         _animator.SetTrigger(POP_TRIGGER);
         _isActive = true;
     }
 
     public void OnTextReadyForReuse() {
-        //_text.enabled = false;
         _isActive = false;
 
         if (_onTextReadyForReuse != null) {

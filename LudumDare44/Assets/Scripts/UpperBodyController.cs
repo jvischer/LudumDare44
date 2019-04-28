@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ using UnityEngine;
 public class UpperBodyController : MonoBehaviour {
 
     private const string PUNCH_TRIGGER = "Punch";
+    private const string DEATH_TRIGGER = "Dead";
 
     [SerializeField] private ParticleSystem _punchFX;
     [SerializeField] private ParticleSystemRenderer _punchRendererFX;
@@ -70,6 +72,10 @@ public class UpperBodyController : MonoBehaviour {
         Vector3 flip = _punchRendererFX.flip;
         flip.x = facingDir > 0 ? 0 : facingDir < 0 ? 1 : _punchRendererFX.flip.x;
         _punchRendererFX.flip = flip;
+    }
+
+    public void Died() {
+        _animator.SetTrigger(DEATH_TRIGGER);
     }
 
 }

@@ -22,6 +22,15 @@ public class GameData {
         return defaultGameData;
     }
 
+    public void TryRespawn() {
+        if (PlayerCurrentHealth <= 0) {
+            PlayerHealthLvl = 0;
+            PlayerDamageLvl = 0;
+            PlayerWeaponLvl = 0;
+            PlayerCurrentHealth = GetPlayerHealth();
+        }
+    }
+
     public int GetPlayerHealth() {
         return 3 + PlayerHealthLvl;
     }

@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 4900220709976990591}
   - component: {fileID: 4900220709976990588}
   - component: {fileID: 4900220709976990589}
+  - component: {fileID: 1897573752}
+  - component: {fileID: 1897573758}
+  - component: {fileID: 1897573753}
   m_Layer: 0
   m_Name: EnergyCell
   m_TagString: Untagged
@@ -135,3 +138,50 @@ PolygonCollider2D:
       - {x: -0.3071171, y: 0.0731709}
       - {x: 0.0009050369, y: -0.26248097}
       - {x: 0.30711722, y: 0.06521511}
+--- !u!58 &1897573752
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4900220709976990576}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.05}
+  serializedVersion: 2
+  m_Radius: 0.4
+--- !u!95 &1897573758
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4900220709976990576}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 09ef97bde8493a643a77419cb1cb4bd0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1897573753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4900220709976990576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eca7a8ece421b3f459557da830fe1173, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -9,6 +9,7 @@ public class CameraController2D : MonoBehaviour {
     [SerializeField] private Vector3 _centerOffset;
     [SerializeField] private float _lookAheadFactor;
     [SerializeField] private float _movementSpeed;
+    [SerializeField] private float _maxVerticalDisplacement = float.MaxValue;
 
     private Camera _camera;
     private float _initialZ;
@@ -24,6 +25,13 @@ public class CameraController2D : MonoBehaviour {
         Vector3 lookAheadPos = targetPos + lookAheadOffset;
 
         Vector3 newPos = Vector3.Lerp(transform.position, lookAheadPos, _movementSpeed * Time.fixedDeltaTime);
+        if (Mathf.Abs(newPos.y - lookAheadPos.y) > _maxVerticalDisplacement) {
+            if (newPos.y > lookAheadPos.y) {
+                newPos.y = lookAheadPos.y + _maxVerticalDisplacement;
+            } else {
+                newPos.y = lookAheadPos.y - _maxVerticalDisplacement;
+            }
+        }
         newPos.z = _initialZ;
         transform.position = newPos;
     }

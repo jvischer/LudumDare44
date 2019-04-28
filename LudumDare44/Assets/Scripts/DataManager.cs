@@ -15,7 +15,9 @@ public static class DataManager {
         if (serializedGameData.Length == 0) {
             return GameData.GetDefault();
         }
-        return JsonUtility.FromJson<GameData>(serializedGameData);
+        GameData gameData = JsonUtility.FromJson<GameData>(serializedGameData);
+        gameData.TryRespawn();
+        return gameData;
     }
 
     public static void SaveGameData(GameData gameData) {
@@ -23,7 +25,16 @@ public static class DataManager {
         PlayerPrefs.SetString(GAME_DATA_KEY, serializedGameData);
         PlayerPrefs.Save();
     }
-    
+
+    public static bool TakeDamage(int amount) {
+        GameManager.gameData.PlayerCurrentHealth -= amount;
+        if (GameManager.gameData.PlayerCurrentHealth <= 0) {
+            GameManager.gameData.PlayerCurrentHealth = 0;
+            return true;
+        }
+        return false;
+    }
+
     public static void AddPlayerHealth(int amount) {
         int maxHealth = GameManager.gameData.GetPlayerHealth();
         if (GameManager.gameData.PlayerCurrentHealth + amount > maxHealth) {

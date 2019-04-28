@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private UpperBodyController _upperBodyController;
     [SerializeField] private LowerBodyController _lowerBodyController;
     [SerializeField] private LayerMask _groundLayerMask;
+    [SerializeField] private Vector3 _damageOffset;
 
     [Space]
 
@@ -19,21 +20,31 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float _downwardGravitationalForceMagnitude = 1;
     [SerializeField] private float _jumpBoost = 1;
 
+    public static PlayerController instance;
+
     private RaycastHit2D[] _raycastHit2DCache;
     private Rigidbody2D _rb2d;
     private BoxCollider2D _col2d;
     private float _horizVelocity;
     private bool _isGrounded;
     private bool _hasJumped;
+    private bool _isDead;
 
     private void Awake() {
+        instance = this;
+
         _raycastHit2DCache = new RaycastHit2D[1];
         _rb2d = gameObject.GetComponent<Rigidbody2D>();
         _col2d = gameObject.GetComponent<BoxCollider2D>();
         _hasJumped = false;
+        _isDead = false;
     }
 
     private void Update() {
+        if (_isDead) {
+            return;
+        }
+
         float horizInputAxis = Input.GetAxis("Horizontal");
         float vertInputAxis = Input.GetAxis("Vertical");
         if (Input.GetButtonDown("Jump")) {
@@ -59,6 +70,10 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
+        if (_isDead) {
+            return;
+        }
+
         float distance = 0.15F;
         float width = _col2d.size.x;
         float height = _col2d.size.y;
@@ -101,9 +116,33 @@ public class PlayerController : MonoBehaviour {
         return false;
     }
 
+    public void TakeDamage(int damage) {
+        if (_isDead) {
+            return;
+        }
+
+        if (DataManager.TakeDamage(damage)) {
+            _isDead = true;
+
+            _rb2d.velocity = Vector2.zero;
+            _upperBodyController.Died();
+            _lowerBodyController.Died();
+            _lowerBodyController.SetMoving(false);
+            JamSceneManager.ReloadSceneWithDelay(1.0F);
+        }
+
+        DamageManager.DisplayDamageAt(damage, transform.position + _damageOffset);
+    }
+
     public void PickedUpHealth(int amount) {
         DataManager.AddPlayerHealth(amount);
         Debug.Log("Restored " + amount + " health");
+    }
+
+    public bool isDead {
+        get {
+            return _isDead;
+        }
     }
 
 }

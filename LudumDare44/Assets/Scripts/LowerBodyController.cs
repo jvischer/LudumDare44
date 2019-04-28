@@ -8,6 +8,7 @@ public class LowerBodyController : MonoBehaviour {
 
     private const string IS_MOVING_BOOL = "IsMoving";
     private const string IS_GROUNDED_BOOL = "IsGrounded";
+    private const string DEATH_TRIGGER = "Dead";
 
     private Animator _animator;
 
@@ -21,6 +22,10 @@ public class LowerBodyController : MonoBehaviour {
 
     public void SetGrounded(bool isGrounded) {
         _animator.SetBool(IS_GROUNDED_BOOL, isGrounded);
+    }
+
+    public void Died() {
+        _animator.SetTrigger(DEATH_TRIGGER);
     }
 
 }

@@ -53,6 +53,10 @@ public class PlayerController : MonoBehaviour {
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            TakeDamage(999999);
+        }
+
         float horizInputAxis = Input.GetAxis("Horizontal");
         float vertInputAxis = Input.GetAxis("Vertical");
         if (Input.GetButtonDown("Jump")) {

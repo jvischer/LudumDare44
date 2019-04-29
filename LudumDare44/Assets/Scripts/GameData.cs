@@ -9,7 +9,7 @@ public class GameData {
 
     public JamScene LoadedJamScene;
 
-    public int PlayerHealthLvl;
+    public int PlayerMaxHealth;
     public int PlayerDamageLvl;
     public int PlayerWeaponLvl;
 
@@ -18,19 +18,19 @@ public class GameData {
     public static GameData GetDefault() {
         GameData defaultGameData = new GameData();
         defaultGameData.LoadedJamScene = JamScene.Invalid;
-        defaultGameData.PlayerHealthLvl = 0;
+        defaultGameData.PlayerMaxHealth = 3;
         defaultGameData.PlayerDamageLvl = 0;
         defaultGameData.PlayerWeaponLvl = 0;
-        defaultGameData.PlayerCurrentHealth = defaultGameData.GetPlayerHealth();
+        defaultGameData.PlayerCurrentHealth = defaultGameData.GetPlayerMaxHealth();
         return defaultGameData;
     }
 
     public void TryRespawn() {
-        PlayerCurrentHealth = GetPlayerHealth();
+        PlayerCurrentHealth = GetPlayerMaxHealth();
     }
 
-    public int GetPlayerHealth() {
-        return 3 + PlayerHealthLvl;
+    public int GetPlayerMaxHealth() {
+        return PlayerMaxHealth;
     }
 
     public int GetPlayerDamage() {

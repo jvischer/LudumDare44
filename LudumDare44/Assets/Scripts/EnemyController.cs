@@ -248,6 +248,12 @@ public class EnemyController : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
+    public bool isDead {
+        get {
+            return _isDead;
+        }
+    }
+
     public enum AttackType {
         Melee, Ranged,
     }

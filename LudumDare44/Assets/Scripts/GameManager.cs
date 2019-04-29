@@ -16,20 +16,7 @@ public class GameManager : MonoBehaviour {
     private void OnApplicationPause() {
         DataManager.SaveGameData(_gameData);
     }
-
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            gameData.PlayerWeaponLvl = 0;
-            DataManager.SaveGameData(gameData);
-        } else if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            gameData.PlayerWeaponLvl = 1;
-            DataManager.SaveGameData(gameData);
-        } else if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            gameData.PlayerWeaponLvl = 2;
-            DataManager.SaveGameData(gameData);
-        }
-    }
-
+    
     public static GameData gameData {
         get {
             if (_gameData == null) {

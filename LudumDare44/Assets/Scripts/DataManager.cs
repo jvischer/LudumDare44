@@ -31,6 +31,16 @@ public static class DataManager {
         SaveGameData(GameManager.gameData);
     }
 
+    public static void AddWeaponLvl() {
+        GameManager.gameData.PlayerWeaponLvl++;
+        SaveGameData(GameManager.gameData);
+    }
+
+    public static void AddDamageLvl() {
+        GameManager.gameData.PlayerDamageLvl++;
+        SaveGameData(GameManager.gameData);
+    }
+
     public static bool TakeDamage(int amount) {
         GameManager.gameData.PlayerCurrentHealth -= amount;
         if (GameManager.gameData.PlayerCurrentHealth <= 0) {
@@ -41,12 +51,32 @@ public static class DataManager {
     }
 
     public static void AddPlayerHealth(int amount) {
-        int maxHealth = GameManager.gameData.GetPlayerHealth();
+        int maxHealth = GameManager.gameData.GetPlayerMaxHealth();
         if (GameManager.gameData.PlayerCurrentHealth + amount > maxHealth) {
             GameManager.gameData.PlayerCurrentHealth = maxHealth;
         } else {
             GameManager.gameData.PlayerCurrentHealth += amount;
         }
+    }
+
+    public static void AddPlayerMaxHealth(int amount) {
+        GameManager.gameData.PlayerCurrentHealth += amount;
+        GameManager.gameData.PlayerMaxHealth += amount;
+        SaveGameData(GameManager.gameData);
+    }
+
+    public static bool TryRemovePlayerMaxHealth(int amount) {
+        if (GameManager.gameData.PlayerMaxHealth <= amount) {
+            return false;
+        }
+
+        GameManager.gameData.PlayerMaxHealth -= amount;
+        if (GameManager.gameData.PlayerCurrentHealth > GameManager.gameData.PlayerMaxHealth) {
+            GameManager.gameData.PlayerCurrentHealth = GameManager.gameData.PlayerMaxHealth;
+        }
+
+        SaveGameData(GameManager.gameData);
+        return true;
     }
 
     public static int GetMaxHPRewardForScene(JamScene jamScene) {
@@ -119,6 +149,20 @@ public static class DataManager {
                 return 18;
         }
         return 1;
+    }
+
+    public static int GetCostForWeaponLvl(int levelToBuy) {
+        switch (levelToBuy) {
+            case 1:
+                return 20;
+            case 2:
+                return 100;
+        }
+        return 1;
+    }
+
+    public static int GetCostForDamageLvl(int levelToBuy) {
+        return levelToBuy + Mathf.FloorToInt((float) 2 * levelToBuy / 4.0F);
     }
 
 }

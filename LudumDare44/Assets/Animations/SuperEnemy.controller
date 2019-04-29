@@ -6,7 +6,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BasicEnemy
+  m_Name: SuperEnemy
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Attack
@@ -127,7 +127,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 2bb111d2ab9c16b47bd74f1ac1841ca7, type: 2}
+  m_Motion: {fileID: 7400000, guid: e2afbf419d4aecc4abbbb297c2f29df5, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

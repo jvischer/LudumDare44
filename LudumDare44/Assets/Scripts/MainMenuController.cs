@@ -12,7 +12,7 @@ public class MainMenuController : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.J) && Input.GetKeyDown(KeyCode.Insert)) {
             GameManager.gameData.PlayerWeaponLvl = 2;
-            GameManager.gameData.PlayerDamageLvl = 10;
+            GameManager.gameData.PlayerDamageLvl = 11;
             GameManager.gameData.PlayerMaxHealth = 777;
             DataManager.SaveGameData(GameManager.gameData);
             JamSceneManager.ReloadSceneWithDelay(0);

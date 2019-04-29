@@ -8,7 +8,7 @@ public class JumpPadController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision) {
         Rigidbody2D rb2d = collision.gameObject.GetComponent<Rigidbody2D>();
-        if (rb2d != null) {
+        if (rb2d != null && collision.gameObject.layer == 8) {
             Vector3 velocity = rb2d.velocity;
             velocity.y = _boostSpeed;
             rb2d.velocity = velocity;

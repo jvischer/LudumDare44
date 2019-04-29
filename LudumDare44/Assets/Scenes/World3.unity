@@ -913,6 +913,7 @@ MonoBehaviour:
   _centerOffset: {x: 0, y: 1, z: 0}
   _lookAheadFactor: 1
   _movementSpeed: 0.6
+  _maxHorizontalDisplacement: 2
   _maxVerticalDisplacement: 1.1
 --- !u!1 &788074855
 GameObject:

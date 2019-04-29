@@ -9,12 +9,14 @@ public class WeaponPurchaseButton : MonoBehaviour {
     [SerializeField] private int _weaponId;
 
     private Button _button;
+    private int _cost;
 
     private void Awake() {
         _button = gameObject.GetComponent<Button>();
     }
 
     private void Start() {
+        _cost = DataManager.GetCostForWeaponLvl(_weaponId + 1);
         Refresh();
     }
 
@@ -27,7 +29,7 @@ public class WeaponPurchaseButton : MonoBehaviour {
             return;
         }
 
-        if (_weaponId == GameManager.gameData.PlayerWeaponLvl) {
+        if (_weaponId == GameManager.gameData.PlayerWeaponLvl && DataManager.TryRemovePlayerMaxHealth(_cost)) {
             DataManager.AddWeaponLvl();
             Refresh();
         }

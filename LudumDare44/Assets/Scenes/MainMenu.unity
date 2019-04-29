@@ -1552,7 +1552,10 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: '* completing a level by killing all mobs restores all missing health and
-    rewards additional max health *'
+    rewards additional max health *
+
+    * Controls: arrow keys/space to move. A to punch. S to swing the laser sword.
+    D to fire lasers. *'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -1591,7 +1594,7 @@ MonoBehaviour:
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 16
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -1621,12 +1624,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 146140216}
-    characterCount: 104
+    characterCount: 202
     spriteCount: 0
-    spaceCount: 17
-    wordCount: 16
+    spaceCount: 37
+    wordCount: 35
     linkCount: 0
-    lineCount: 1
+    lineCount: 2
     pageCount: 1
     materialCount: 1
   m_havePropertiesChanged: 0
@@ -3567,6 +3570,7 @@ MonoBehaviour:
   - {fileID: 671653336}
   _healthFillBar: {fileID: 966525067}
   _healthText: {fileID: 1929546102}
+  _gainedHealthText: {fileID: 0}
 --- !u!222 &763782086
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4932,7 +4936,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1005001943}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -5135,6 +5139,7 @@ GameObject:
   - component: {fileID: 1132799048}
   - component: {fileID: 1132799047}
   - component: {fileID: 1132799046}
+  - component: {fileID: 1132799049}
   m_Layer: 5
   m_Name: ExitButton
   m_TagString: Untagged
@@ -5252,6 +5257,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1132799044}
   m_CullTransparentMesh: 0
+--- !u!114 &1132799049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132799044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cefcf2bcf07c77d438891738b78a0ada, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1281920070
 GameObject:
   m_ObjectHideFlags: 0

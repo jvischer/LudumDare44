@@ -27,12 +27,11 @@ public class DamagePurchaseButton : MonoBehaviour {
     }
 
     public void TryPurchase() {
-        Debug.Log(IsOwned + " " + _damageId + " " + GameManager.gameData.PlayerDamageLvl);
         if (IsOwned) {
             return;
         }
 
-        if (_damageId == GameManager.gameData.PlayerDamageLvl) {
+        if (_damageId == GameManager.gameData.PlayerDamageLvl && DataManager.TryRemovePlayerMaxHealth(_cost)) {
             DataManager.AddDamageLvl();
             Refresh();
         }

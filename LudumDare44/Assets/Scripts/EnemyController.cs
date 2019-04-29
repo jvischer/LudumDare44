@@ -209,6 +209,7 @@ public class EnemyController : MonoBehaviour {
 
             _rb2d.velocity = Vector2.zero;
             _animator.SetTrigger(DEATH_TRIGGER);
+            StopAllCoroutines();
         }
     }
 

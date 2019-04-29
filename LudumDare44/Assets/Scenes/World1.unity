@@ -9830,6 +9830,44 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 3896513086476737039, guid: f0043bb60f965ab4db9681a92a4c72f1,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3896513086476737039, guid: f0043bb60f965ab4db9681a92a4c72f1,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414387627951197741, guid: f0043bb60f965ab4db9681a92a4c72f1,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5414387627951197741, guid: f0043bb60f965ab4db9681a92a4c72f1,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6965403064986070301, guid: f0043bb60f965ab4db9681a92a4c72f1,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6965403064986070301, guid: f0043bb60f965ab4db9681a92a4c72f1,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1878712689, guid: f0043bb60f965ab4db9681a92a4c72f1, type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1878712689, guid: f0043bb60f965ab4db9681a92a4c72f1, type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0043bb60f965ab4db9681a92a4c72f1, type: 3}
 --- !u!1001 &1712323155577925267
